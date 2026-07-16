@@ -212,22 +212,24 @@ body.locked{overflow:hidden; height:100vh;}
 .balloon{
   position:absolute; width:112px; height:auto; cursor:pointer; z-index:3;
   animation:float-balloon 4.5s ease-in-out infinite;
-  transition:transform .25s ease, opacity .4s ease, filter .25s ease;
+  transition:none;
   filter:drop-shadow(0 12px 14px rgba(0,0,0,.25));
   background:transparent !important; border:0; padding:0;
   -webkit-tap-highlight-color:transparent;
   overflow:visible;
+  will-change:transform, opacity;
 }
 .balloon img{width:100%; height:auto; display:block; pointer-events:none; user-select:none;}
-.balloon:hover{transform:scale(1.1) rotate(3deg);}
+.balloon:hover:not(.popped){transform:scale(1.08) rotate(2deg);}
 .balloon.popped{
-  animation:balloon-pop .22s ease-out forwards;
+  animation:balloon-pop .15s ease-out forwards !important;
+  transition:none !important;
   pointer-events:none;
 }
 @keyframes balloon-pop{
-  0%{transform:scale(1); opacity:1; filter:drop-shadow(0 12px 14px rgba(0,0,0,.22));}
-  35%{transform:scale(1.25); opacity:.85;}
-  100%{transform:scale(1.55); opacity:0; filter:blur(1px);}
+  0%{transform:scale(1) rotate(0deg); opacity:1; filter:drop-shadow(0 12px 14px rgba(0,0,0,.22));}
+  40%{transform:scale(1.2) rotate(6deg); opacity:.7;}
+  100%{transform:scale(0.2) rotate(-8deg); opacity:0; filter:blur(0);}
 }
 @keyframes float-balloon{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-22px) rotate(4deg);}}
 #entrance-hint{animation:pulse-soft 1.8s ease-in-out infinite;}
@@ -1069,13 +1071,17 @@ positions.forEach((pos, i)=>{
   b.appendChild(img);
   b.addEventListener('click', ()=>{
     if(b.classList.contains('popped')) return;
+    // stop float dulu biar pop semua balon sama cepetnya
+    b.style.animation = 'none';
+    b.style.transform = 'scale(1)';
+    void b.offsetWidth;
     b.classList.add('popped');
     const rect = b.getBoundingClientRect();
-    fireConfetti({particleCount:55, spread:70, origin:{x:(rect.left+rect.width/2)/window.innerWidth, y:(rect.top+rect.height/2)/window.innerHeight}, startVelocity:38});
+    fireConfetti({particleCount:40, spread:60, origin:{x:(rect.left+rect.width/2)/window.innerWidth, y:(rect.top+rect.height/2)/window.innerHeight}, startVelocity:32});
     popped++;
     if(popped === positions.length){
       setTimeout(()=>{
-        fireConfetti({particleCount:240, spread:120, origin:{y:.5}});
+        fireConfetti({particleCount:200, spread:110, origin:{y:.5}});
         document.getElementById('entrance').classList.add('hide');
         document.body.classList.remove('locked');
         document.getElementById('site').style.opacity = 1;
@@ -1083,7 +1089,7 @@ positions.forEach((pos, i)=>{
         if(musicBtn) musicBtn.classList.remove('hidden');
         setMusic(true);
         showCelebrate();
-      }, 200);
+      }, 160);
     }
   });
   field.appendChild(b);
