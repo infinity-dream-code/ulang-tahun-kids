@@ -518,6 +518,37 @@ a.inline-flex:active, button:active{ transform:scale(.96); }
 </style>
 </head>
 <body class="locked">
+<script>
+/* Balon inline — cukup upload index.html, tanpa folder assets */
+window.balloonDataUri = function(c1,c2,c3,uid){
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160">'+
+    '<defs><linearGradient id="b'+uid+'" x1="30%" y1="5%" x2="75%" y2="100%">'+
+    '<stop offset="0%" stop-color="'+c1+'"/><stop offset="50%" stop-color="'+c2+'"/><stop offset="100%" stop-color="'+c3+'"/></linearGradient>'+
+    '<radialGradient id="s'+uid+'" cx="32%" cy="28%" r="26%">'+
+    '<stop offset="0%" stop-color="#fff" stop-opacity=".95"/><stop offset="65%" stop-color="#fff" stop-opacity=".22"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/>'+
+    '</radialGradient></defs>'+
+    '<ellipse cx="60" cy="58" rx="46" ry="56" fill="url(#b'+uid+')"/>'+
+    '<ellipse cx="60" cy="58" rx="46" ry="56" fill="url(#s'+uid+')"/>'+
+    '<path d="M52 112 Q60 120 68 112 L64 122 Q60 126 56 122 Z" fill="'+c3+'"/>'+
+    '<path d="M60 122 C58 134 66 142 58 152" fill="none" stroke="'+c3+'" stroke-width="2.5" stroke-linecap="round"/>'+
+    '</svg>';
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+};
+window.balloonImgs = [
+  balloonDataUri('#FF9EAD','#FF5566','#D4283C','r'),
+  balloonDataUri('#FFB3D9','#FF6FA9','#E9457F','p'),
+  balloonDataUri('#FFE98A','#FFD23A','#E6A800','y'),
+  balloonDataUri('#A8D8FF','#4AB0FF','#1E7AD8','b'),
+  balloonDataUri('#9BE8B8','#3DC97A','#1FA05A','g'),
+  balloonDataUri('#D9B8FF','#A06BE8','#7A3FC0','u')
+];
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('[data-balloon]').forEach(function(el){
+    var key = el.getAttribute('data-balloon');
+    el.src = key==='blue' ? balloonImgs[3] : key==='yellow' ? balloonImgs[2] : balloonImgs[1];
+  });
+});
+</script>
 <div id="celebrate" aria-hidden="true"><div class="burst">Selamat Datang di Pestanya Kirana!</div></div>
 
 
@@ -526,7 +557,7 @@ a.inline-flex:active, button:active{ transform:scale(.96); }
 <!-- ================= LOADING ================= -->
 <div id="loading">
   <div class="loading-balloon">
-    <img src="assets/balloons/02-pink.svg" alt="">
+    <img data-balloon="pink" alt="">
   </div>
   <div class="loading-bar">
     <div id="loadFill"></div>
@@ -614,13 +645,13 @@ a.inline-flex:active, button:active{ transform:scale(.96); }
     <div class="floaty text-3xl" style="top:22%; right:12%; color:var(--pink); opacity:.5;"><i class="fa-solid fa-star"></i></div>
     <div class="floaty fast text-3xl" style="bottom:18%; left:10%; color:var(--pink); opacity:.45;"><i class="fa-solid fa-heart"></i></div>
     <div class="floaty slow" style="top:10%; right:2%; width:130px; pointer-events:none;">
-      <img src="assets/balloons/02-pink.svg" alt="" style="width:100%; height:auto; filter:drop-shadow(0 12px 16px rgba(58,46,57,.22));">
+      <img data-balloon="pink" alt="" style="width:100%; height:auto; filter:drop-shadow(0 12px 16px rgba(58,46,57,.22));">
     </div>
     <div class="floaty slow" style="top:8%; left:1%; width:118px; pointer-events:none; animation-delay:.6s;">
-      <img src="assets/balloons/04-blue.svg" alt="" style="width:100%; height:auto; filter:drop-shadow(0 10px 14px rgba(58,46,57,.2));">
+      <img data-balloon="blue" alt="" style="width:100%; height:auto; filter:drop-shadow(0 10px 14px rgba(58,46,57,.2));">
     </div>
     <div class="floaty fast" style="bottom:14%; right:3%; width:108px; pointer-events:none;">
-      <img src="assets/balloons/03-yellow.svg" alt="" style="width:100%; height:auto; filter:drop-shadow(0 10px 14px rgba(58,46,57,.2));">
+      <img data-balloon="yellow" alt="" style="width:100%; height:auto; filter:drop-shadow(0 10px 14px rgba(58,46,57,.2));">
     </div>
 
     <div class="sparkle-field" id="sparkleField" aria-hidden="true"></div>
@@ -1011,14 +1042,7 @@ envelope.addEventListener('keydown', (e)=>{
 });
 
 /* ---------- balloon pop entrance ---------- */
-const balloonImgs = [
-  'assets/balloons/01-red.svg',
-  'assets/balloons/02-pink.svg',
-  'assets/balloons/03-yellow.svg',
-  'assets/balloons/04-blue.svg',
-  'assets/balloons/05-green.svg',
-  'assets/balloons/06-purple.svg'
-];
+const balloonImgs = window.balloonImgs;
 const field = document.getElementById('balloonField');
 const positions = [
   {top:'2%', left:'4%'}, {top:'8%', left:'36%'}, {top:'2%', left:'66%'},
