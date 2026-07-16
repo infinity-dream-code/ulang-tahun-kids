@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kirana Ulang Tahun ke-5!</title>
+<meta name="description" content="Undangan ulang tahun Kirana yang ke-5! Yuk datang rayakan bersama.">
+<meta property="og:title" content="Kirana Ulang Tahun ke-5!">
+<meta property="og:description" content="Yuk datang dan rayakan hari bahagia Kirana.">
+<meta property="og:type" content="website">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -263,17 +267,135 @@ body.locked{overflow:hidden; height:100vh;}
 .swatch{width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:0 6px 0 rgba(0,0,0,.15); transition:transform .25s;}
 .swatch:hover{transform:translateY(-6px) rotate(8deg);}
 
-/* gallery */
-.gallery-item{overflow:hidden; border-radius:1.25rem; position:relative;}
-.gallery-item img{transition:transform .5s ease;}
-.gallery-item:hover img{transform:scale(1.12) rotate(1deg);}
-.gallery-item::after{content:"\f00e"; font-family:"Font Awesome 6 Free"; font-weight:900; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; background:rgba(58,46,57,0); transition:.3s;}
-.gallery-item:hover::after{background:rgba(58,46,57,.35);}
+/* gallery polaroid */
+.gallery-item{
+  background:#fff; padding:12px 12px 36px; border-radius:6px;
+  box-shadow:0 10px 0 rgba(0,0,0,.06), 0 14px 28px rgba(58,46,57,.12);
+  transform:rotate(var(--tilt, -2deg));
+  transition:transform .35s ease, box-shadow .35s ease;
+  position:relative; cursor:pointer;
+}
+.gallery-item:nth-child(even){--tilt:2deg;}
+.gallery-item:nth-child(3n){--tilt:-3deg;}
+.gallery-item:hover{transform:rotate(0deg) translateY(-8px) scale(1.03); box-shadow:0 18px 0 rgba(0,0,0,.05), 0 22px 40px rgba(58,46,57,.16); z-index:2;}
+.gallery-item .shot{overflow:hidden; border-radius:4px; aspect-ratio:1; position:relative;}
+.gallery-item img{width:100%; height:100%; object-fit:cover; transition:transform .5s ease;}
+.gallery-item:hover img{transform:scale(1.08);}
+.gallery-item .cap{
+  position:absolute; left:12px; right:12px; bottom:10px;
+  font-family:'Caveat',cursive; font-size:1.15rem; text-align:center; color:var(--ink);
+}
+
+/* hero polaroid */
+.hero-polaroid{
+  width:min(220px,58vw); margin:1.25rem auto 1.75rem;
+  background:#fff; padding:12px 12px 40px;
+  border-radius:6px;
+  box-shadow:0 16px 0 rgba(0,0,0,.05), 0 20px 40px rgba(58,46,57,.15);
+  transform:rotate(-3deg);
+  animation:polaroid-in .9s cubic-bezier(.22,1,.36,1) both;
+}
+.hero-polaroid img{width:100%; aspect-ratio:1; object-fit:cover; border-radius:4px; display:block;}
+.hero-polaroid .cap{font-family:'Caveat',cursive; font-size:1.35rem; text-align:center; margin-top:10px; color:var(--pink-deep);}
+@keyframes polaroid-in{from{opacity:0; transform:rotate(-8deg) translateY(24px) scale(.92);}to{opacity:1; transform:rotate(-3deg) translateY(0) scale(1);}}
+
+/* ambient sparkles */
+.sparkle-field{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1;}
+.sparkle-bit{
+  position:absolute; width:8px; height:8px; border-radius:50%;
+  opacity:0; animation:sparkle-fall linear infinite;
+}
+@keyframes sparkle-fall{
+  0%{transform:translateY(-10px) rotate(0deg); opacity:0;}
+  10%{opacity:.85;}
+  100%{transform:translateY(110vh) rotate(360deg); opacity:0;}
+}
+
+/* wish stars */
+.wish-sky{
+  position:relative; min-height:180px; border-radius:2rem;
+  background:linear-gradient(160deg,#2B1B4D, #5B2C8B 55%, #9B5DE5);
+  overflow:hidden; box-shadow:0 16px 0 rgba(0,0,0,.08);
+}
+.wish-star{
+  position:absolute; color:#FFE28A; cursor:pointer; font-size:1.4rem;
+  background:transparent; border:0; padding:0; line-height:1;
+  transition:transform .2s; filter:drop-shadow(0 0 6px rgba(255,226,138,.6));
+  animation:wish-twinkle 2s ease-in-out infinite;
+}
+.wish-star:hover{transform:scale(1.35);}
+@keyframes wish-twinkle{0%,100%{opacity:.65;}50%{opacity:1;}}
+.wish-float{
+  position:absolute; left:50%; bottom:20%;
+  color:#fff; font-family:'Caveat',cursive; font-size:1.4rem;
+  pointer-events:none; white-space:nowrap;
+  text-shadow:0 4px 12px rgba(0,0,0,.35);
+  animation:wish-rise 2.4s ease-out forwards;
+}
+@keyframes wish-rise{
+  0%{opacity:0; transform:translate(-50%,20px) scale(.8);}
+  20%{opacity:1;}
+  100%{opacity:0; transform:translate(-50%,-120px) scale(1.1);}
+}
+
+/* wheel labels */
+.wheel-labels{position:absolute; inset:0; border-radius:50%; pointer-events:none; z-index:2;}
+.wheel-label{
+  position:absolute; left:50%; top:50%;
+  width:64px; margin-left:-32px; margin-top:-22px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  font-family:'Baloo 2',cursive; font-size:.72rem; font-weight:800;
+  color:var(--ink); text-align:center; line-height:1.05;
+  text-shadow:0 1px 0 rgba(255,255,255,.35);
+  transform:rotate(calc(var(--a) * 1deg)) translateY(-78px) rotate(calc(var(--a) * -1deg));
+}
+.wheel-label i{font-size:1rem; display:block;}
 
 /* spin wheel */
-#wheel-wrap{position:relative; width:280px; height:280px; margin:0 auto;}
-#wheel{width:100%; height:100%; border-radius:50%; border:8px solid var(--ink); box-shadow:0 10px 0 rgba(0,0,0,.15); transition:transform 4s cubic-bezier(.17,.89,.32,1.15);}
-#pointer{position:absolute; top:-14px; left:50%; transform:translateX(-50%); font-size:2rem; color:var(--ink); z-index:5;}
+#wheel-wrap{position:relative; width:min(300px,78vw); height:min(300px,78vw); margin:1.5rem auto 0;}
+#wheel{
+  position:relative; width:100%; height:100%; border-radius:50%;
+  border:10px solid var(--ink);
+  box-shadow:0 12px 0 rgba(0,0,0,.12), inset 0 0 0 3px rgba(255,255,255,.25);
+  transition:transform 4s cubic-bezier(.17,.89,.32,1.15);
+  overflow:hidden;
+}
+#wheel::before{
+  content:""; position:absolute; inset:0; border-radius:50%; z-index:1; pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, transparent 0 59deg, rgba(58,46,57,.18) 59deg 60deg);
+}
+#wheel::after{
+  content:""; position:absolute; left:50%; top:50%; z-index:3;
+  width:42px; height:42px; margin:-21px 0 0 -21px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff, #FFEAD6 55%, #E8C9A0);
+  border:4px solid var(--ink);
+  box-shadow:0 4px 0 rgba(0,0,0,.15);
+}
+#pointer{
+  position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+  z-index:6; width:0; height:0;
+  border-left:14px solid transparent; border-right:14px solid transparent;
+  border-top:22px solid var(--ink);
+  filter:drop-shadow(0 3px 0 rgba(0,0,0,.15));
+}
+#pointer i{display:none;}
+
+/* rsvp counter chip */
+.rsvp-chip{
+  display:inline-flex; align-items:center; gap:.4rem;
+  background:#fff; border:2px solid var(--pink); color:var(--pink-deep);
+  border-radius:999px; padding:.35rem .9rem; font-weight:700; font-size:.9rem;
+}
+
+/* lightbox nav */
+.lb-nav{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:48px; height:48px; border-radius:50%; border:0; cursor:pointer;
+  background:rgba(255,255,255,.2); color:#fff; font-size:1.2rem;
+  display:flex; align-items:center; justify-content:center;
+}
+.lb-nav:hover{background:rgba(255,255,255,.35);}
+.lb-prev{left:1rem;} .lb-next{right:1rem;}
 
 /* faq */
 .faq-item summary{cursor:pointer; list-style:none;}
@@ -391,7 +513,7 @@ body.locked{overflow:hidden; height:100vh;}
   </nav>
 
   <!-- HERO -->
-  <section id="beranda" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-16">
+  <section id="beranda" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-16">
     <div class="absolute inset-0 bg-dots"></div>
     <div class="floaty slow text-5xl" style="top:12%; left:8%; color:var(--sky);"><i class="fa-solid fa-cloud"></i></div>
     <div class="floaty text-5xl" style="top:20%; right:10%; color:var(--pink);"><i class="fa-solid fa-star"></i></div>
@@ -401,7 +523,12 @@ body.locked{overflow:hidden; height:100vh;}
     <div class="floaty fast text-4xl" style="top:60%; right:20%; color:var(--pink);"><i class="fa-solid fa-heart"></i></div>
     <div class="floaty slow text-5xl" style="top:8%; left:45%; color:var(--gold);"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
 
+    <div class="sparkle-field" id="sparkleField" aria-hidden="true"></div>
     <div class="relative z-10 text-center px-6 max-w-2xl" id="heroBox">
+      <div class="hero-polaroid">
+        <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=500&h=500&q=80" alt="Kirana ceria">
+        <p class="cap">Kirana · 5 tahun!</p>
+      </div>
       <span class="inline-flex items-center gap-2 bg-white text-[var(--purple)] font-bold px-5 py-2 rounded-full shadow mb-6 font-display">
         <i class="fa-solid fa-candy-cane"></i> Candyland Birthday Adventure <i class="fa-solid fa-star"></i>
       </span>
@@ -409,10 +536,15 @@ body.locked{overflow:hidden; height:100vh;}
         Yeay! <span style="color:var(--pink)">Kirana</span><br>Ulang Tahun ke-<span style="color:var(--yellow); -webkit-text-stroke:2px var(--ink);">5</span>!
       </h1>
       <p class="text-lg md:text-xl font-medium mb-8">Yuk datang dan rayakan hari bahagia Kirana bersama balon, permen, dan seribu keceriaan!</p>
-      <a href="#acara" class="inline-flex items-center gap-2 bg-[var(--ink)] text-white font-display font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:scale-105 transition">
-        Lihat Undangan <i class="fa-solid fa-arrow-down"></i>
-      </a>
-      <div class="flex justify-center gap-5 mt-10 text-2xl md:text-3xl">
+      <div class="flex flex-wrap justify-center gap-3 mb-4">
+        <a href="#acara" class="inline-flex items-center gap-2 bg-[var(--ink)] text-white font-display font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:scale-105 transition">
+          Lihat Undangan <i class="fa-solid fa-arrow-down"></i>
+        </a>
+        <a href="#rsvp" class="inline-flex items-center gap-2 bg-[var(--pink)] text-white font-display font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:scale-105 transition">
+          Konfirmasi Hadir <i class="fa-solid fa-paper-plane"></i>
+        </a>
+      </div>
+      <div class="flex justify-center gap-5 mt-8 text-2xl md:text-3xl">
         <i class="fa-solid fa-heart" style="color:var(--pink);"></i>
         <i class="fa-solid fa-cake-candles" style="color:var(--yellow);"></i>
         <i class="fa-solid fa-cookie-bite" style="color:var(--sky);"></i>
@@ -520,13 +652,13 @@ body.locked{overflow:hidden; height:100vh;}
       <span class="font-display text-[var(--purple)] font-bold"><i class="fa-solid fa-camera-retro mr-1"></i> Galeri</span>
       <h2 class="font-display text-4xl md:text-5xl font-extrabold mt-2">Momen Ceria Kirana <i class="fa-solid fa-camera" style="color:var(--pink);"></i></h2>
     </div>
-    <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4" id="gallery">
-      <div class="gallery-item reveal cursor-pointer aspect-square"><img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=600&h=600&q=80" class="w-full h-full object-cover" alt="Anak-anak bahagia" loading="lazy"></div>
-      <div class="gallery-item reveal cursor-pointer aspect-square"><img src="https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=600&h=600&q=80" class="w-full h-full object-cover" alt="Pesta ulang tahun anak" loading="lazy"></div>
-      <div class="gallery-item reveal cursor-pointer aspect-square"><img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=600&h=600&q=80" class="w-full h-full object-cover" alt="Tiup lilin kue ulang tahun" loading="lazy"></div>
-      <div class="gallery-item reveal cursor-pointer aspect-square"><img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=600&h=600&q=80" class="w-full h-full object-cover" alt="Anak tersenyum ceria" loading="lazy"></div>
-      <div class="gallery-item reveal cursor-pointer aspect-square"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&h=600&q=80" class="w-full h-full object-cover" alt="Balon pesta warna-warni" loading="lazy"></div>
-      <div class="gallery-item reveal cursor-pointer aspect-square"><img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=600&h=600&q=80" class="w-full h-full object-cover" alt="Mainan & keceriaan anak" loading="lazy"></div>
+    <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-7" id="gallery">
+      <div class="gallery-item reveal" data-i="0"><div class="shot"><img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=600&h=600&q=80" alt="Anak-anak bahagia" loading="lazy"></div><p class="cap">Teman-teman ceria</p></div>
+      <div class="gallery-item reveal" data-i="1"><div class="shot"><img src="https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=600&h=600&q=80" alt="Pesta ulang tahun anak" loading="lazy"></div><p class="cap">Pesta seru!</p></div>
+      <div class="gallery-item reveal" data-i="2"><div class="shot"><img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=600&h=600&q=80" alt="Tiup lilin kue ulang tahun" loading="lazy"></div><p class="cap">Hore tiup lilin</p></div>
+      <div class="gallery-item reveal" data-i="3"><div class="shot"><img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=600&h=600&q=80" alt="Anak tersenyum ceria" loading="lazy"></div><p class="cap">Senyum manis</p></div>
+      <div class="gallery-item reveal" data-i="4"><div class="shot"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&h=600&q=80" alt="Balon pesta warna-warni" loading="lazy"></div><p class="cap">Balon warna-warni</p></div>
+      <div class="gallery-item reveal" data-i="5"><div class="shot"><img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=600&h=600&q=80" alt="Mainan & keceriaan anak" loading="lazy"></div><p class="cap">Main bareng yuk</p></div>
     </div>
     <p class="text-center text-sm text-gray-500 mt-6">*Foto contoh dari internet — ganti dengan foto asli Kirana ya!</p>
   </section>
@@ -539,12 +671,28 @@ body.locked{overflow:hidden; height:100vh;}
       <p>Coba keberuntunganmu, siapa tahu dapat kejutan dari Kirana</p>
     </div>
     <div id="wheel-wrap" class="reveal">
-      <div id="pointer"><i class="fa-solid fa-caret-down"></i></div>
-      <div id="wheel" style="background:conic-gradient(var(--pink) 0deg 60deg, var(--yellow) 60deg 120deg, var(--sky) 120deg 180deg, var(--green) 180deg 240deg, var(--purple) 240deg 300deg, var(--gold) 300deg 360deg);"></div>
+      <div id="pointer" aria-hidden="true"></div>
+      <div id="wheel" style="background:conic-gradient(var(--pink) 0deg 60deg, var(--yellow) 60deg 120deg, var(--sky) 120deg 180deg, var(--green) 180deg 240deg, var(--purple) 240deg 300deg, var(--gold) 300deg 360deg);">
+        <div class="wheel-labels" id="wheelLabels"></div>
+      </div>
     </div>
     <div class="text-center mt-8 reveal">
       <button id="spinBtn" class="bg-[var(--ink)] text-white font-display font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:scale-105 transition"><i class="fa-solid fa-rotate mr-2"></i>Putar!</button>
       <p id="prizeText" class="font-display font-bold text-xl mt-5 opacity-0 transition" style="color:var(--pink-deep);"></p>
+    </div>
+
+    <!-- wish stars -->
+    <div class="max-w-2xl mx-auto mt-24 reveal text-center mb-6">
+      <h3 class="font-display text-3xl font-bold mb-2"><i class="fa-solid fa-star mr-2" style="color:var(--gold);"></i>Bintang Harapan</h3>
+      <p class="mb-6 text-sm">Ketuk bintangnya, kirim doa & harapan buat Kirana</p>
+      <div class="wish-sky" id="wishSky">
+        <button type="button" class="wish-star" style="left:12%; top:28%; animation-delay:.1s" data-wish="Sehat selalu, Kirana!"><i class="fa-solid fa-star"></i></button>
+        <button type="button" class="wish-star" style="left:28%; top:55%; animation-delay:.4s" data-wish="Semoga makin pintar!"><i class="fa-solid fa-star"></i></button>
+        <button type="button" class="wish-star" style="left:48%; top:22%; animation-delay:.7s" data-wish="Panjang umur & bahagia!"><i class="fa-solid fa-star"></i></button>
+        <button type="button" class="wish-star" style="left:62%; top:58%; animation-delay:.2s" data-wish="Banyak teman baru!"><i class="fa-solid fa-star"></i></button>
+        <button type="button" class="wish-star" style="left:78%; top:32%; animation-delay:.9s" data-wish="Hari-harimu penuh tawa!"><i class="fa-solid fa-star"></i></button>
+        <button type="button" class="wish-star" style="left:85%; top:62%; animation-delay:.5s" data-wish="Sukses jadi anak hebat!"><i class="fa-solid fa-star"></i></button>
+      </div>
     </div>
 
     <!-- FAQ -->
@@ -576,7 +724,8 @@ body.locked{overflow:hidden; height:100vh;}
     <div class="max-w-xl mx-auto text-center reveal mb-10">
       <span class="font-display text-[var(--purple)] font-bold"><i class="fa-solid fa-envelope mr-1"></i> RSVP</span>
       <h2 class="font-display text-4xl md:text-5xl font-extrabold mt-2 mb-3">Konfirmasi Kehadiran</h2>
-      <p>Mohon konfirmasi sebelum 5 Agustus 2026 ya!</p>
+      <p class="mb-4">Mohon konfirmasi sebelum 5 Agustus 2026 ya!</p>
+      <div class="rsvp-chip"><i class="fa-solid fa-users"></i> <span id="rsvpCountChip">0</span> tamu sudah konfirmasi</div>
     </div>
 
     <form id="rsvpForm" class="max-w-xl mx-auto bg-white rounded-3xl p-8 shadow-xl reveal space-y-5">
@@ -640,13 +789,13 @@ body.locked{overflow:hidden; height:100vh;}
 
   <!-- LIGHTBOX -->
   <div id="lightbox" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-6">
-    <button id="lightboxClose" class="absolute top-6 right-6 text-white text-3xl"><i class="fa-solid fa-xmark"></i></button>
+    <button id="lightboxClose" class="absolute top-6 right-6 text-white text-3xl" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+    <button type="button" class="lb-nav lb-prev" id="lightboxPrev" aria-label="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
     <img id="lightboxImg" src="" class="max-h-[80vh] max-w-full rounded-2xl">
+    <button type="button" class="lb-nav lb-next" id="lightboxNext" aria-label="Berikutnya"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
-  <audio id="bgMusic" loop preload="none">
-    <source src="https://assets.mixkit.co/music/preview/mixkit-happy-ukulele-598.mp3" type="audio/mpeg">
-  </audio>
+  <audio id="bgMusic" loop preload="none" src="https://mp3tourl.com/audio/1784180726263-39e40e91-d924-4aaf-8267-b8c08a11a0c4.mp3">Your browser does not support audio</audio>
 </div>
 
 <script>
@@ -723,6 +872,7 @@ function openEnvelope(){
   if(envelopeHint) envelopeHint.style.opacity = 0;
   if(envelopeBadge){ envelopeBadge.style.transition = 'opacity .4s ease'; envelopeBadge.style.opacity = 0; }
   fireConfetti({particleCount:60, spread:70, origin:{y:.4}});
+  setMusic(true);
   setTimeout(()=>{
     document.getElementById('envelope-stage').classList.add('hide');
     document.getElementById('entrance').classList.add('show');
@@ -761,6 +911,7 @@ positions.forEach((pos, i)=>{
         document.getElementById('site').style.opacity = 1;
         const musicBtn = document.getElementById('musicToggle');
         musicBtn.classList.remove('hidden');
+        setMusic(true);
       }, 400);
     }
   });
@@ -880,27 +1031,53 @@ for(let i=0;i<26;i++){
 /* ---------- lightbox ---------- */
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
-document.querySelectorAll('#gallery img').forEach(img=>{
-  img.addEventListener('click', ()=>{
-    lightboxImg.src = img.src;
-    lightbox.classList.remove('hidden');
-    lightbox.classList.add('flex');
-  });
+const galleryImgs = [...document.querySelectorAll('#gallery img')];
+let lbIndex = 0;
+function openLightbox(i){
+  lbIndex = i;
+  lightboxImg.src = galleryImgs[lbIndex].src;
+  lightbox.classList.remove('hidden');
+  lightbox.classList.add('flex');
+}
+function shiftLightbox(d){
+  lbIndex = (lbIndex + d + galleryImgs.length) % galleryImgs.length;
+  lightboxImg.src = galleryImgs[lbIndex].src;
+}
+document.querySelectorAll('#gallery .gallery-item').forEach((item,i)=>{
+  item.addEventListener('click', ()=>openLightbox(i));
 });
 document.getElementById('lightboxClose').addEventListener('click', ()=>{
   lightbox.classList.add('hidden'); lightbox.classList.remove('flex');
 });
+document.getElementById('lightboxPrev').addEventListener('click', e=>{ e.stopPropagation(); shiftLightbox(-1); });
+document.getElementById('lightboxNext').addEventListener('click', e=>{ e.stopPropagation(); shiftLightbox(1); });
 lightbox.addEventListener('click', e=>{ if(e.target === lightbox){ lightbox.classList.add('hidden'); lightbox.classList.remove('flex'); }});
+document.addEventListener('keydown', e=>{
+  if(lightbox.classList.contains('hidden')) return;
+  if(e.key === 'Escape'){ lightbox.classList.add('hidden'); lightbox.classList.remove('flex'); }
+  if(e.key === 'ArrowLeft') shiftLightbox(-1);
+  if(e.key === 'ArrowRight') shiftLightbox(1);
+});
 
 /* ---------- spin wheel ---------- */
 const prizes = [
-  {icon:'fa-solid fa-gift', label:'Balon Gratis'},
-  {icon:'fa-solid fa-heart', label:'Pelukan dari Kirana'},
-  {icon:'fa-solid fa-wand-magic-sparkles', label:'Kejutan Spesial'},
-  {icon:'fa-solid fa-candy-cane', label:'Permen Extra'},
-  {icon:'fa-solid fa-camera', label:'Foto Bareng Kirana'},
-  {icon:'fa-solid fa-star', label:'Stiker Lucu'}
+  {icon:'fa-solid fa-gift', label:'Balon Gratis', short:'Balon'},
+  {icon:'fa-solid fa-heart', label:'Pelukan dari Kirana', short:'Pelukan'},
+  {icon:'fa-solid fa-wand-magic-sparkles', label:'Kejutan Spesial', short:'Kejutan'},
+  {icon:'fa-solid fa-candy-cane', label:'Permen Extra', short:'Permen'},
+  {icon:'fa-solid fa-camera', label:'Foto Bareng Kirana', short:'Foto'},
+  {icon:'fa-solid fa-star', label:'Stiker Lucu', short:'Stiker'}
 ];
+const wheelLabels = document.getElementById('wheelLabels');
+if(wheelLabels){
+  prizes.forEach((p,i)=>{
+    const el = document.createElement('div');
+    el.className = 'wheel-label';
+    el.style.setProperty('--a', String(i * 60 + 30));
+    el.innerHTML = '<i class="' + p.icon + '"></i><span>' + p.short + '</span>';
+    wheelLabels.appendChild(el);
+  });
+}
 let spinning = false;
 document.getElementById('spinBtn').addEventListener('click', ()=>{
   if(spinning) return;
@@ -933,6 +1110,13 @@ if(guestBook.length === 0){
     {name:'Sepupu Alya', msg:'Ga sabar main balon bareng kamu, Kirana!'}
   ];
 }
+let rsvpList = [];
+try{ rsvpList = JSON.parse(localStorage.getItem('kirana_rsvp') || '[]'); }catch(e){ rsvpList = []; }
+function updateRsvpChip(){
+  const chip = document.getElementById('rsvpCountChip');
+  if(chip) chip.textContent = rsvpList.reduce((n,r)=>n + (parseInt(r.count,10)||1), 0);
+}
+updateRsvpChip();
 function renderWall(){
   wall.innerHTML = '';
   guestBook.slice().reverse().forEach((g,i)=>{
@@ -964,6 +1148,10 @@ document.getElementById('rsvpForm').addEventListener('submit', function(e){
   const waText = `Halo! Saya ${name} (${count} orang) mengonfirmasi: ${hadir} untuk ulang tahun Kirana.${msg ? ' Ucapan: ' + msg : ''}`;
   document.getElementById('waLink').href = 'https://wa.me/6281234567890?text=' + encodeURIComponent(waText);
 
+  rsvpList.push({name, count, hadir});
+  try{ localStorage.setItem('kirana_rsvp', JSON.stringify(rsvpList)); }catch(err){}
+  updateRsvpChip();
+
   if(msg){
     guestBook.push({name, msg});
     try{ localStorage.setItem('kirana_guestbook', JSON.stringify(guestBook)); }catch(err){}
@@ -976,14 +1164,77 @@ document.getElementById('rsvpForm').addEventListener('submit', function(e){
 const bgMusic = document.getElementById('bgMusic');
 const musicToggle = document.getElementById('musicToggle');
 let playing = false;
-musicToggle.addEventListener('click', ()=>{
+bgMusic.volume = 0.55;
+
+function setMusic(on){
+  if(!bgMusic) return;
   try{
-    if(playing){ bgMusic.pause(); musicToggle.innerHTML = '<i class="fa-solid fa-music"></i>'; }
-    else{ bgMusic.play().catch(()=>{}); musicToggle.innerHTML = '<i class="fa-solid fa-volume-high"></i>'; }
-    playing = !playing;
+    if(on){
+      const p = bgMusic.play();
+      if(p && typeof p.then === 'function'){
+        p.then(()=>{
+          playing = true;
+          if(musicToggle){
+            musicToggle.classList.remove('hidden');
+            musicToggle.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+          }
+        }).catch(()=>{
+          playing = false;
+          if(musicToggle){
+            musicToggle.classList.remove('hidden');
+            musicToggle.innerHTML = '<i class="fa-solid fa-music"></i>';
+          }
+        });
+      }else{
+        playing = true;
+        if(musicToggle) musicToggle.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+      }
+    }else{
+      bgMusic.pause();
+      playing = false;
+      if(musicToggle) musicToggle.innerHTML = '<i class="fa-solid fa-music"></i>';
+    }
   }catch(err){}
+}
+
+if(musicToggle){
+  musicToggle.classList.remove('hidden');
+  musicToggle.addEventListener('click', ()=>setMusic(!playing));
+}
+bgMusic.addEventListener('error', ()=>{
+  console.warn('Gagal load musik:', bgMusic.currentSrc || bgMusic.src);
 });
-bgMusic.addEventListener('error', ()=>{ musicToggle.classList.add('hidden'); });
+
+/* ---------- wish stars ---------- */
+document.querySelectorAll('.wish-star').forEach(star=>{
+  star.addEventListener('click', ()=>{
+    const sky = document.getElementById('wishSky');
+    const bubble = document.createElement('div');
+    bubble.className = 'wish-float';
+    bubble.textContent = star.dataset.wish || 'Semoga bahagia!';
+    sky.appendChild(bubble);
+    fireConfetti({particleCount:40, spread:55, origin:{
+      x:(star.offsetLeft + 12)/sky.clientWidth,
+      y:(star.offsetTop + 12)/sky.clientHeight
+    }});
+    setTimeout(()=>bubble.remove(), 2400);
+  });
+});
+
+/* ---------- hero sparkles ---------- */
+const sparkleField = document.getElementById('sparkleField');
+if(sparkleField){
+  for(let i=0;i<18;i++){
+    const s = document.createElement('span');
+    s.className = 'sparkle-bit';
+    s.style.left = Math.random()*100 + '%';
+    s.style.background = colors[i % colors.length];
+    s.style.animationDuration = (6 + Math.random()*8) + 's';
+    s.style.animationDelay = (Math.random()*6) + 's';
+    s.style.width = s.style.height = (5 + Math.random()*7) + 'px';
+    sparkleField.appendChild(s);
+  }
+}
 
 /* ---------- magic fab ---------- */
 document.getElementById('magic-fab').addEventListener('click', (e)=>{
