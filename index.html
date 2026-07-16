@@ -53,17 +53,24 @@ body.locked{overflow:hidden; height:100vh;}
   transition:opacity .6s ease, visibility .6s ease;
 }
 #loading.hide{opacity:0; visibility:hidden; pointer-events:none;}
-.load-balloon{
-  width:90px; height:110px; border-radius:50% 50% 50% 50%/60% 60% 42% 42%;
-  background:linear-gradient(180deg, var(--pink), var(--pink-deep));
-  position:relative; overflow:hidden; box-shadow:inset -8px -10px 20px rgba(0,0,0,.15);
+.loading-balloon{
+  width:130px; margin-bottom:.35rem;
 }
-.load-balloon .fill{
-  position:absolute; bottom:0; left:0; right:0; height:0%;
-  background:linear-gradient(180deg, var(--yellow), var(--gold));
-  transition:height .15s linear;
+.loading-balloon img{
+  width:100%; height:auto; display:block;
+  filter:drop-shadow(0 10px 12px rgba(0,0,0,.18));
+  animation:float-balloon 2.5s ease-in-out infinite;
 }
-#load-pct{font-family:'Baloo 2',cursive; font-weight:800; font-size:1.5rem; margin-top:1.2rem;}
+.loading-bar{
+  width:72px; height:8px; border-radius:999px; overflow:hidden; margin:0.4rem 0 0;
+  background:rgba(58,46,57,.12);
+}
+.loading-bar #loadFill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg,var(--pink),var(--yellow));
+  transition:width .15s linear;
+}
+#load-pct{font-family:'Baloo 2',cursive; font-weight:800; font-size:1.5rem; margin-top:.75rem;}
 
 /* ===================== ENVELOPE ===================== */
 #envelope-stage{
@@ -191,42 +198,93 @@ body.locked{overflow:hidden; height:100vh;}
 /* ===================== BALLOON POP ===================== */
 #entrance{
   position:fixed; inset:0; z-index:100;
-  background:linear-gradient(160deg,var(--sky),var(--pink) 55%,var(--purple));
+  background:
+    linear-gradient(160deg, rgba(79,195,247,.82), rgba(255,111,169,.78) 55%, rgba(155,93,229,.9)),
+    url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1600&q=80') center/cover;
   display:flex; align-items:center; justify-content:center;
-  opacity:0; visibility:hidden; transition:opacity .7s ease, visibility .7s ease;
+  opacity:0; visibility:hidden; transition:opacity .35s ease, visibility .35s ease;
+  overflow:visible;
 }
 #entrance.show{opacity:1; visibility:visible;}
 #entrance.hide{opacity:0; visibility:hidden; pointer-events:none;}
 
-.balloon-field{position:relative; width:100%; max-width:520px; height:420px;}
+.balloon-field{position:relative; width:100%; max-width:560px; height:min(54vh, 440px); min-height:340px; z-index:2; overflow:visible; margin:0 auto;}
 .balloon{
-  position:absolute; width:78px; height:96px;
-  border-radius:50% 50% 50% 50% / 60% 60% 42% 42%;
-  cursor:pointer;
+  position:absolute; width:112px; height:auto; cursor:pointer; z-index:3;
   animation:float-balloon 4.5s ease-in-out infinite;
-  box-shadow:inset -10px -10px 20px rgba(0,0,0,.12), inset 8px 10px 18px rgba(255,255,255,.35);
-  transition:transform .25s ease, opacity .35s ease;
+  transition:transform .25s ease, opacity .4s ease, filter .25s ease;
+  filter:drop-shadow(0 12px 14px rgba(0,0,0,.25));
+  background:transparent !important; border:0; padding:0;
+  -webkit-tap-highlight-color:transparent;
+  overflow:visible;
 }
-.balloon::after{
-  content:""; position:absolute; left:50%; bottom:-34px; width:2px; height:34px;
-  background:rgba(255,255,255,.7); transform:translateX(-50%);
+.balloon img{width:100%; height:auto; display:block; pointer-events:none; user-select:none;}
+.balloon:hover{transform:scale(1.1) rotate(3deg);}
+.balloon.popped{
+  animation:balloon-pop .22s ease-out forwards;
+  pointer-events:none;
 }
-.balloon::before{
-  content:""; position:absolute; left:50%; bottom:-8px; width:0; height:0;
-  border-left:5px solid transparent; border-right:5px solid transparent;
-  border-top:8px solid currentColor; transform:translateX(-50%);
+@keyframes balloon-pop{
+  0%{transform:scale(1); opacity:1; filter:drop-shadow(0 12px 14px rgba(0,0,0,.22));}
+  35%{transform:scale(1.25); opacity:.85;}
+  100%{transform:scale(1.55); opacity:0; filter:blur(1px);}
 }
-.balloon:hover{transform:scale(1.08);}
-.balloon.popped{animation:none; transform:scale(1.5); opacity:0; pointer-events:none;}
 @keyframes float-balloon{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-22px) rotate(4deg);}}
 #entrance-hint{animation:pulse-soft 1.8s ease-in-out infinite;}
 @keyframes pulse-soft{0%,100%{opacity:.75;transform:translateY(0);}50%{opacity:1;transform:translateY(-4px);}}
+
+/* ambient flying balloons - disabled */
+.sky-balloons,.sticker-rain{display:none !important;}
+.sky-balloon{display:none;}
+@keyframes sky-rise{0%{opacity:0;}100%{opacity:0;}}
+.sticker-bit{display:none;}
+@keyframes sticker-fall{0%{opacity:0;}100%{opacity:0;}}
+
+/* wave divider */
+.wave-divider{line-height:0; margin:-1px 0;}
+.wave-divider svg{display:block; width:100%; height:56px;}
+
+/* photo ribbon */
+.photo-ribbon{overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);}
+.photo-ribbon-track{
+  display:flex; gap:14px; width:max-content;
+  animation:ribbon-scroll 35s linear infinite;
+}
+.photo-ribbon-track img{
+  width:160px; height:160px; object-fit:cover; border-radius:1rem;
+  border:4px solid #fff; box-shadow:0 10px 0 rgba(0,0,0,.06);
+}
+@keyframes ribbon-scroll{to{transform:translateX(-50%);}}
+
+/* celebrate flash */
+#celebrate{
+  position:fixed; inset:0; z-index:180; pointer-events:none;
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle, rgba(255,255,255,.35), transparent 60%);
+  opacity:0; visibility:hidden; transition:opacity .4s ease;
+}
+#celebrate.show{opacity:1; visibility:visible;}
+#celebrate .burst{
+  font-family:'Baloo 2',cursive; font-size:clamp(2rem,8vw,3.5rem); font-weight:800;
+  color:var(--pink-deep); text-align:center;
+  text-shadow:0 6px 0 rgba(255,255,255,.8);
+  animation:burst-in .8s cubic-bezier(.22,1,.36,1);
+}
+@keyframes burst-in{from{transform:scale(.4) rotate(-8deg); opacity:0;}to{transform:scale(1) rotate(0); opacity:1;}}
+
+/* sticker rain disabled */
 
 /* ===================== SITE GENERAL ===================== */
 #site{opacity:0; transition:opacity 1s ease;}
 .floaty{position:absolute; animation:float-balloon 6s ease-in-out infinite;}
 .floaty.slow{animation-duration:8s;}
 .floaty.fast{animation-duration:4s;}
+.hero-scroll-hint{
+  position:absolute; left:50%; bottom:1.25rem; transform:translateX(-50%);
+  font-size:1.35rem; color:var(--ink); opacity:.7;
+  animation:pulse-soft 1.8s ease-in-out infinite;
+  z-index:5; pointer-events:none; margin-top:2rem;
+}
 .reveal{opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease;}
 .reveal.in{opacity:1; transform:translateY(0);}
 
@@ -235,6 +293,8 @@ body.locked{overflow:hidden; height:100vh;}
 .nav-pill{background:rgba(255,255,255,.88); backdrop-filter:blur(8px); box-shadow:0 8px 24px rgba(58,46,57,.12);}
 .nav-link{position:relative; transition:color .2s;}
 .nav-link:hover{color:var(--pink);}
+.nav-cta{background:var(--pink); color:#fff !important; transition:transform .2s, filter .2s, background .2s;}
+.nav-cta:hover{color:#fff !important; background:var(--pink-deep); filter:brightness(1.05);}
 
 .side-dots{position:fixed; right:20px; top:50%; transform:translateY(-50%); z-index:40; display:flex; flex-direction:column; gap:14px;}
 .side-dot{width:11px; height:11px; border-radius:50%; background:#fff; border:2px solid var(--purple); cursor:pointer; transition:.25s;}
@@ -254,9 +314,28 @@ body.locked{overflow:hidden; height:100vh;}
 .timeline-dot{position:absolute; left:-2.5rem; top:0; width:26px; height:26px; border-radius:50%; background:#fff; border:3px solid var(--purple); display:flex; align-items:center; justify-content:center; font-size:.75rem; color:var(--purple);}
 
 /* cake */
+.cake-scene{width:230px; margin:0 auto; filter:drop-shadow(0 16px 18px rgba(58,46,57,.22));}
+.cake-tier{position:relative; margin:0 auto;}
+.cake-tier.cake-top{
+  width:150px; height:60px; border-radius:8px 8px 3px 3px;
+  background:linear-gradient(180deg,#FFF6E0,#FFD98A);
+  box-shadow:inset 0 -10px 14px rgba(0,0,0,.08), inset 0 6px 8px rgba(255,255,255,.4);
+}
+.cake-tier.cake-bottom{
+  width:212px; height:70px; margin-top:6px; border-radius:8px 8px 4px 4px;
+  background:linear-gradient(180deg,#FFD3E6,#FF8FBC);
+  box-shadow:inset 0 -12px 16px rgba(0,0,0,.1), inset 0 6px 8px rgba(255,255,255,.35);
+}
+.cake-icing-band{
+  position:absolute; left:-9%; right:-9%; top:-14px; height:26px; pointer-events:none;
+  background:
+    radial-gradient(circle at 10px 12px, #fffdf8 9px, transparent 10px) 0 4px/20px 20px repeat-x,
+    linear-gradient(#fffdf8,#fff) 0 0/100% 15px no-repeat;
+}
 .candle{cursor:pointer;}
 .flame{width:10px;height:16px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%; background:radial-gradient(circle at 50% 70%, #FFE066, #FF9C33 70%, #E8590C); transform-origin:bottom center; animation:flicker 1s ease-in-out infinite;}
 @keyframes flicker{0%,100%{transform:scale(1) rotate(-2deg);}50%{transform:scale(1.15) rotate(2deg);}}
+.candle:hover .flame{animation-duration:.4s;}
 .candle.blown .flame{opacity:0; transform:scale(.2);}
 .candle.blown .smoke{opacity:1; animation:smoke-rise 1.2s ease-out forwards;}
 .smoke{position:absolute; top:-6px; left:50%; width:6px; height:6px; border-radius:50%; background:rgba(150,150,150,.6); opacity:0; transform:translateX(-50%);}
@@ -427,15 +506,31 @@ body.locked{overflow:hidden; height:100vh;}
 
 @media (prefers-reduced-motion: reduce){*{animation-duration:.001s !important; transition-duration:.2s !important;}}
 @media (max-width: 768px){.side-dots{display:none;}}
+@media (max-width: 640px){
+  .floaty{display:none;}
+  #beranda{padding-top:6.5rem;}
+  .hero-polaroid{margin-top:.25rem;}
+  .nav-pill{padding-left:.9rem !important; padding-right:.9rem !important; gap:.6rem !important;}
+}
+/* tap feedback for touch devices */
+.party-card:active, .swatch:active, .gallery-item:active, .fab:active,
+a.inline-flex:active, button:active{ transform:scale(.96); }
 </style>
 </head>
 <body class="locked">
+<div id="celebrate" aria-hidden="true"><div class="burst">Selamat Datang di Pestanya Kirana!</div></div>
+
 
 <div id="scrollbar-top"></div>
 
 <!-- ================= LOADING ================= -->
 <div id="loading">
-  <div class="load-balloon"><div class="fill" id="loadFill"></div></div>
+  <div class="loading-balloon">
+    <img src="assets/balloons/02-pink.svg" alt="">
+  </div>
+  <div class="loading-bar">
+    <div id="loadFill"></div>
+  </div>
   <p id="load-pct" style="color:var(--ink);">0%</p>
   <p class="font-display font-semibold mt-1" style="color:var(--purple);">Menyiapkan pesta...</p>
 </div>
@@ -479,13 +574,13 @@ body.locked{overflow:hidden; height:100vh;}
 
 <!-- ================= BALLOON POP ================= -->
 <div id="entrance">
-  <div class="text-center px-6">
+  <div class="text-center px-6 relative z-10 max-w-xl mx-auto">
     <p class="font-display text-white text-2xl md:text-3xl mb-2 drop-shadow">Undangan Spesial untuk</p>
-    <h1 class="font-display text-white text-4xl md:text-6xl font-extrabold mb-8 drop-shadow-lg flex items-center justify-center gap-3">
+    <h1 class="font-display text-white text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg flex items-center justify-center gap-3">
       Kamu! <i class="fa-solid fa-cake-candles text-3xl md:text-5xl" style="color:var(--yellow);"></i>
     </h1>
     <div class="balloon-field mx-auto" id="balloonField"></div>
-    <p id="entrance-hint" class="text-white font-semibold mt-6 font-display text-lg">
+    <p id="entrance-hint" class="text-white font-semibold mt-5 font-display text-lg relative z-10">
       <i class="fa-solid fa-hand-pointer mr-1"></i> Pecahkan semua balon untuk membuka undangan
     </p>
   </div>
@@ -508,20 +603,25 @@ body.locked{overflow:hidden; height:100vh;}
     <a href="#acara" class="nav-link font-semibold hidden sm:inline">Acara</a>
     <a href="#galeri" class="nav-link font-semibold hidden sm:inline">Galeri</a>
     <a href="#seru" class="nav-link font-semibold hidden sm:inline">Seru-seruan</a>
-    <a href="#rsvp" class="nav-link font-semibold bg-[var(--pink)] text-white px-4 py-1.5 rounded-full">RSVP</a>
+    <a href="#rsvp" class="nav-cta font-semibold px-4 py-1.5 rounded-full">RSVP</a>
     <button id="musicToggle" class="text-[var(--purple)] text-lg hidden" title="Musik"><i class="fa-solid fa-music"></i></button>
   </nav>
 
   <!-- HERO -->
-  <section id="beranda" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-16">
+  <section id="beranda" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-28 pb-24">
     <div class="absolute inset-0 bg-dots"></div>
-    <div class="floaty slow text-5xl" style="top:12%; left:8%; color:var(--sky);"><i class="fa-solid fa-cloud"></i></div>
-    <div class="floaty text-5xl" style="top:20%; right:10%; color:var(--pink);"><i class="fa-solid fa-star"></i></div>
-    <div class="floaty fast text-5xl" style="bottom:16%; left:12%; color:var(--yellow);"><i class="fa-solid fa-candy-cane"></i></div>
-    <div class="floaty slow text-5xl" style="bottom:10%; right:8%; color:var(--purple);"><i class="fa-solid fa-gift"></i></div>
-    <div class="floaty text-4xl" style="top:38%; left:4%; color:var(--green);"><i class="fa-solid fa-leaf"></i></div>
-    <div class="floaty fast text-4xl" style="top:60%; right:20%; color:var(--pink);"><i class="fa-solid fa-heart"></i></div>
-    <div class="floaty slow text-5xl" style="top:8%; left:45%; color:var(--gold);"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+    <div class="floaty slow text-4xl" style="top:14%; left:7%; color:var(--sky); opacity:.55;"><i class="fa-solid fa-cloud"></i></div>
+    <div class="floaty text-3xl" style="top:22%; right:12%; color:var(--pink); opacity:.5;"><i class="fa-solid fa-star"></i></div>
+    <div class="floaty fast text-3xl" style="bottom:18%; left:10%; color:var(--pink); opacity:.45;"><i class="fa-solid fa-heart"></i></div>
+    <div class="floaty slow" style="top:10%; right:2%; width:130px; pointer-events:none;">
+      <img src="assets/balloons/02-pink.svg" alt="" style="width:100%; height:auto; filter:drop-shadow(0 12px 16px rgba(58,46,57,.22));">
+    </div>
+    <div class="floaty slow" style="top:8%; left:1%; width:118px; pointer-events:none; animation-delay:.6s;">
+      <img src="assets/balloons/04-blue.svg" alt="" style="width:100%; height:auto; filter:drop-shadow(0 10px 14px rgba(58,46,57,.2));">
+    </div>
+    <div class="floaty fast" style="bottom:14%; right:3%; width:108px; pointer-events:none;">
+      <img src="assets/balloons/03-yellow.svg" alt="" style="width:100%; height:auto; filter:drop-shadow(0 10px 14px rgba(58,46,57,.2));">
+    </div>
 
     <div class="sparkle-field" id="sparkleField" aria-hidden="true"></div>
     <div class="relative z-10 text-center px-6 max-w-2xl" id="heroBox">
@@ -532,19 +632,19 @@ body.locked{overflow:hidden; height:100vh;}
       <span class="inline-flex items-center gap-2 bg-white text-[var(--purple)] font-bold px-5 py-2 rounded-full shadow mb-6 font-display">
         <i class="fa-solid fa-candy-cane"></i> Candyland Birthday Adventure <i class="fa-solid fa-star"></i>
       </span>
-      <h1 class="font-display text-5xl md:text-7xl font-extrabold leading-tight mb-4">
+      <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold leading-tight mb-4">
         Yeay! <span style="color:var(--pink)">Kirana</span><br>Ulang Tahun ke-<span style="color:var(--yellow); -webkit-text-stroke:2px var(--ink);">5</span>!
       </h1>
-      <p class="text-lg md:text-xl font-medium mb-8">Yuk datang dan rayakan hari bahagia Kirana bersama balon, permen, dan seribu keceriaan!</p>
-      <div class="flex flex-wrap justify-center gap-3 mb-4">
-        <a href="#acara" class="inline-flex items-center gap-2 bg-[var(--ink)] text-white font-display font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:scale-105 transition">
-          Lihat Undangan <i class="fa-solid fa-arrow-down"></i>
+      <p class="text-base sm:text-lg md:text-xl font-medium mb-8">Yuk datang dan rayakan hari bahagia Kirana bersama balon, permen, dan seribu keceriaan!</p>
+      <div class="flex flex-wrap justify-center gap-3 mb-2">
+        <a href="#acara" class="inline-flex items-center gap-2.5 bg-[var(--ink)] text-white font-display font-bold text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-lg hover:scale-105 transition">
+          Lihat Undangan <i class="fa-solid fa-arrow-down text-sm opacity-90"></i>
         </a>
-        <a href="#rsvp" class="inline-flex items-center gap-2 bg-[var(--pink)] text-white font-display font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:scale-105 transition">
-          Konfirmasi Hadir <i class="fa-solid fa-paper-plane"></i>
+        <a href="#rsvp" class="inline-flex items-center gap-2.5 bg-[var(--pink)] text-white font-display font-bold text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-full shadow-lg hover:scale-105 transition">
+          Konfirmasi Hadir <i class="fa-solid fa-paper-plane text-sm"></i>
         </a>
       </div>
-      <div class="flex justify-center gap-5 mt-8 text-2xl md:text-3xl">
+      <div class="flex justify-center gap-5 mt-8 mb-16 text-2xl md:text-3xl">
         <i class="fa-solid fa-heart" style="color:var(--pink);"></i>
         <i class="fa-solid fa-cake-candles" style="color:var(--yellow);"></i>
         <i class="fa-solid fa-cookie-bite" style="color:var(--sky);"></i>
@@ -552,7 +652,7 @@ body.locked{overflow:hidden; height:100vh;}
         <i class="fa-solid fa-star" style="color:var(--green);"></i>
       </div>
     </div>
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 text-2xl animate-bounce" style="color:var(--ink);"><i class="fa-solid fa-chevron-down"></i></div>
+    <div class="hero-scroll-hint" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></div>
   </section>
 
   <!-- ACARA -->
@@ -617,23 +717,26 @@ body.locked{overflow:hidden; height:100vh;}
     <div class="max-w-md mx-auto text-center reveal mb-24">
       <h3 class="font-display text-2xl font-bold mb-2">Bantu Kirana Tiup Lilinnya! <i class="fa-solid fa-fire" style="color:#FF9C33;"></i></h3>
       <p class="mb-6 text-sm">Klik satu-satu lilinnya sampai padam semua</p>
-      <div class="relative inline-block">
-        <div class="flex justify-center gap-3 mb-1" id="candles">
-          <div class="candle relative" data-i="1"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-10 mx-auto" style="background:var(--pink);border-radius:2px;"></div></div>
-          <div class="candle relative" data-i="2"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-10 mx-auto" style="background:var(--sky);border-radius:2px;"></div></div>
-          <div class="candle relative" data-i="3"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-10 mx-auto" style="background:var(--purple);border-radius:2px;"></div></div>
-          <div class="candle relative" data-i="4"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-10 mx-auto" style="background:var(--green);border-radius:2px;"></div></div>
-          <div class="candle relative" data-i="5"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-10 mx-auto" style="background:var(--yellow);border-radius:2px;"></div></div>
+      <div class="relative inline-block cake-scene">
+        <div class="flex justify-center gap-3 relative z-10 mb-1" id="candles">
+          <div class="candle relative" data-i="1"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-9 mx-auto" style="background:var(--pink);border-radius:2px;"></div></div>
+          <div class="candle relative" data-i="2"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-9 mx-auto" style="background:var(--sky);border-radius:2px;"></div></div>
+          <div class="candle relative" data-i="3"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-9 mx-auto" style="background:var(--purple);border-radius:2px;"></div></div>
+          <div class="candle relative" data-i="4"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-9 mx-auto" style="background:var(--green);border-radius:2px;"></div></div>
+          <div class="candle relative" data-i="5"><div class="flame mx-auto"></div><div class="smoke"></div><div class="w-2 h-9 mx-auto" style="background:var(--yellow);border-radius:2px;"></div></div>
         </div>
-        <div class="w-56 h-24 rounded-t-3xl mx-auto relative overflow-hidden" id="cakeTop" style="background:repeating-linear-gradient(90deg,var(--pink),var(--pink) 18px,#fff 18px,#fff 36px);"></div>
-        <div class="w-64 h-10 rounded-2xl mx-auto -mt-1" style="background:var(--yellow);"></div>
-        <div class="w-64 h-16 rounded-b-2xl mx-auto" style="background:var(--sky);"></div>
+        <div class="cake-tier cake-top" id="cakeTop">
+          <div class="cake-icing-band"></div>
+        </div>
+        <div class="cake-tier cake-bottom">
+          <div class="cake-icing-band"></div>
+        </div>
       </div>
       <p id="cake-msg" class="font-display font-bold text-xl mt-6 opacity-0 transition"><i class="fa-solid fa-cake-candles mr-1" style="color:var(--pink);"></i> Yeay! Semoga panjang umur, Kirana!</p>
     </div>
 
     <!-- dress code -->
-    <div class="max-w-lg mx-auto text-center reveal">
+    <div class="max-w-lg mx-auto text-center reveal mt-16 md:mt-24 pb-8">
       <h3 class="font-display text-2xl font-bold mb-2"><i class="fa-solid fa-shirt mr-2" style="color:var(--purple);"></i>Dress Code</h3>
       <p class="mb-6 text-sm">Pakai baju warna-warni favoritmu ya!</p>
       <div class="flex justify-center gap-4 flex-wrap">
@@ -644,13 +747,37 @@ body.locked{overflow:hidden; height:100vh;}
         <div class="swatch" style="background:var(--purple);"><i class="fa-solid fa-shirt"></i></div>
       </div>
     </div>
+
   </section>
 
+  <div class="wave-divider" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#FFF9F0" d="M0,40 C240,80 480,0 720,40 C960,80 1200,10 1440,40 L1440,80 L0,80 Z"></path>
+      <path fill="#FFE1EE" d="M0,50 C300,10 600,70 900,35 C1100,15 1300,55 1440,40 L1440,80 L0,80 Z" opacity=".7"></path>
+    </svg>
+  </div>
+
   <!-- GALERI -->
-  <section id="galeri" class="py-24 px-6">
-    <div class="max-w-5xl mx-auto text-center reveal mb-12">
+  <section id="galeri" class="py-24 px-6" style="background:#FFE1EE;">
+    <div class="max-w-5xl mx-auto text-center reveal mb-8">
       <span class="font-display text-[var(--purple)] font-bold"><i class="fa-solid fa-camera-retro mr-1"></i> Galeri</span>
       <h2 class="font-display text-4xl md:text-5xl font-extrabold mt-2">Momen Ceria Kirana <i class="fa-solid fa-camera" style="color:var(--pink);"></i></h2>
+    </div>
+    <div class="photo-ribbon mb-10 reveal" aria-hidden="true">
+      <div class="photo-ribbon-track" id="photoRibbon">
+        <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=300&h=300&q=70" alt="">
+      </div>
     </div>
     <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-7" id="gallery">
       <div class="gallery-item reveal" data-i="0"><div class="shot"><img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=600&h=600&q=80" alt="Anak-anak bahagia" loading="lazy"></div><p class="cap">Teman-teman ceria</p></div>
@@ -858,7 +985,7 @@ const loadTimer = setInterval(()=>{
       document.getElementById('envelope-stage').classList.add('show');
     }, 300);
   }
-  loadFill.style.height = pct + '%';
+  loadFill.style.width = pct + '%';
   loadPct.textContent = Math.floor(pct) + '%';
 }, 180);
 
@@ -884,35 +1011,55 @@ envelope.addEventListener('keydown', (e)=>{
 });
 
 /* ---------- balloon pop entrance ---------- */
+const balloonImgs = [
+  'assets/balloons/01-red.svg',
+  'assets/balloons/02-pink.svg',
+  'assets/balloons/03-yellow.svg',
+  'assets/balloons/04-blue.svg',
+  'assets/balloons/05-green.svg',
+  'assets/balloons/06-purple.svg'
+];
 const field = document.getElementById('balloonField');
 const positions = [
-  {top:'2%', left:'8%'}, {top:'10%', left:'40%'}, {top:'0%', left:'70%'},
-  {top:'45%', left:'20%'}, {top:'50%', left:'55%'}, {top:'40%', left:'82%'}
+  {top:'2%', left:'4%'}, {top:'8%', left:'36%'}, {top:'2%', left:'66%'},
+  {top:'44%', left:'12%'}, {top:'48%', left:'42%'}, {top:'42%', left:'70%'}
 ];
 let popped = 0;
+function showCelebrate(){
+  const el = document.getElementById('celebrate');
+  if(!el) return;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 1600);
+}
 positions.forEach((pos, i)=>{
-  const b = document.createElement('div');
+  const b = document.createElement('button');
+  b.type = 'button';
   b.className = 'balloon';
+  b.setAttribute('aria-label', 'Pecahkan balon ' + (i+1));
   b.style.top = pos.top; b.style.left = pos.left;
-  b.style.background = colors[i % colors.length];
-  b.style.color = colors[i % colors.length];
-  b.style.animationDelay = (i*0.3)+'s';
+  b.style.animationDelay = (i*0.25)+'s';
+  const img = document.createElement('img');
+  img.src = balloonImgs[i % balloonImgs.length];
+  img.alt = 'Balon';
+  img.draggable = false;
+  b.appendChild(img);
   b.addEventListener('click', ()=>{
     if(b.classList.contains('popped')) return;
     b.classList.add('popped');
     const rect = b.getBoundingClientRect();
-    fireConfetti({particleCount:40, spread:60, origin:{x:rect.left/window.innerWidth, y:rect.top/window.innerHeight}});
+    fireConfetti({particleCount:55, spread:70, origin:{x:(rect.left+rect.width/2)/window.innerWidth, y:(rect.top+rect.height/2)/window.innerHeight}, startVelocity:38});
     popped++;
     if(popped === positions.length){
       setTimeout(()=>{
-        fireConfetti({particleCount:220, spread:120, origin:{y:.5}});
+        fireConfetti({particleCount:240, spread:120, origin:{y:.5}});
         document.getElementById('entrance').classList.add('hide');
         document.body.classList.remove('locked');
         document.getElementById('site').style.opacity = 1;
         const musicBtn = document.getElementById('musicToggle');
-        musicBtn.classList.remove('hidden');
+        if(musicBtn) musicBtn.classList.remove('hidden');
         setMusic(true);
-      }, 400);
+        showCelebrate();
+      }, 200);
     }
   });
   field.appendChild(b);
